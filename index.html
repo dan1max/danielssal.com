@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daniel Sánchez Salvador</title>
+  <meta name="description" content="Estudiante de Ingeniería Informática en la USAL. Ciberseguridad, cloud y redes.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- NAVEGACIÓN -->
+  <nav>
+    <a href="index.html" class="nav-logo">D<span>.</span>S<span>.</span>S<span>.</span></a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html" class="active">Inicio</a></li>
+      <li><a href="portfolio.html">Portfolio</a></li>
+      <li><a href="articulos.html">Artículos</a></li>
+      <li><a href="links.html">Links</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+    <!-- HÉROE -->
+    <section class="hero">
+      <p class="hero-eyebrow">Salamanca · España</p>
+      <h1 class="hero-name">Daniel<br><em>Sánchez Salvador</em></h1>
+      <p class="hero-title">Ingeniería Informática · USAL · Ciberseguridad</p>
+    </section>
+
+    <!-- DIVISOR ORNAMENTAL -->
+    <div class="ornament">
+      <svg class="ornament-svg" viewBox="0 0 120 20" xmlns="http://www.w3.org/2000/svg">
+        <line x1="0" y1="10" x2="42" y2="10"/>
+        <path d="M46 10 L52 4 L58 10 L52 16 Z"/>
+        <circle cx="60" cy="10" r="3"/>
+        <path d="M62 10 L68 4 L74 10 L68 16 Z"/>
+        <line x1="78" y1="10" x2="120" y2="10"/>
+      </svg>
+    </div>
+
+    <!-- BIO -->
+    <section class="bio" id="bio">
+      <p class="bio-text" id="bioText"></p>
+    </section>
+
+    <!-- REDES SOCIALES -->
+    <div class="ornament" style="margin-top: 3.5rem;">
+      <div class="ornament-symbol">✦</div>
+    </div>
+
+    <div class="socials">
+
+      <!-- GitHub -->
+      <a href="https://github.com/dan1max" target="_blank" rel="noopener" class="social-link">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>GitHub</span>
+      </a>
+
+      <!-- Substack -->
+      <a href="https://daniconomics.substack.com" target="_blank" rel="noopener" class="social-link">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 5H2v3h20V5zM2 10.5h20V21L12 15.5 2 21V10.5z" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Substack</span>
+      </a>
+
+      <!-- Instagram -->
+      <a href="https://www.instagram.com/creo_que_dani" target="_blank" rel="noopener" class="social-link">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Instagram</span>
+      </a>
+
+    </div>
+
+  </main>
+
+  <!-- PIE DE PÁGINA -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-ornament">— ✦ —</div>
+      <p>© MMXXVI Daniel Sánchez Salvador · <a href="mailto:">danielssal.com</a></p>
+    </div>
+  </footer>
+
+  <script>
+    // Menú hamburguesa
+    const toggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+    toggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+
+    // Animación de bio — aparición palabra a palabra
+    const bio = "Estudiante de Ingeniería Informática en la Universidad de Salamanca. Primer año, con la vista puesta en la ciberseguridad: arquitectura cloud y redes. Esta página crece conmigo.";
+    const container = document.getElementById('bioText');
+
+    const words = bio.split(' ');
+    words.forEach((word, i) => {
+      const span = document.createElement('span');
+      span.className = 'animate-word';
+      span.textContent = word + ' ';
+      span.style.animationDelay = `${1.2 + i * 0.07}s`;
+      container.appendChild(span);
+    });
+  </script>
+
+</body>
+</html>

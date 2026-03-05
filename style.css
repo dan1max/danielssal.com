@@ -1,0 +1,624 @@
+/* ================================================
+   DANIELSSAL.COM — Estilo Neoclásico
+   Paleta: Crema & Oro
+   ================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap');
+
+:root {
+  --cream:        #FAF6EF;
+  --cream-mid:    #F0E8D5;
+  --cream-dark:   #E4D5B7;
+  --gold:         #B8912A;
+  --gold-light:   #D4AC44;
+  --gold-pale:    rgba(184, 145, 42, 0.12);
+  --gold-border:  rgba(184, 145, 42, 0.30);
+  --ink:          #1A0F05;
+  --ink-mid:      #3A2510;
+  --ink-light:    #6B5040;
+  --ink-faint:    #9C8070;
+  --max-w:        780px;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--cream);
+  color: var(--ink);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.75;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── TOP RULE ── */
+body::before {
+  content: '';
+  display: block;
+  height: 3px;
+  background: linear-gradient(90deg, transparent 0%, var(--gold) 30%, var(--gold-light) 50%, var(--gold) 70%, transparent 100%);
+}
+
+/* ================================================
+   NAVIGATION
+   ================================================ */
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.4rem 3rem;
+  border-bottom: 1px solid var(--gold-border);
+  background: var(--cream);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+  text-decoration: none;
+  font-variant: small-caps;
+}
+
+.nav-logo span {
+  color: var(--gold);
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: 'EB Garamond', serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-light);
+  text-decoration: none;
+  position: relative;
+  padding-bottom: 2px;
+  transition: color 0.25s;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 0; height: 1px;
+  background: var(--gold);
+  transition: width 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--gold);
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+  width: 100%;
+}
+
+.nav-links a.dim {
+  color: var(--ink-faint);
+  font-style: italic;
+  cursor: default;
+}
+
+.nav-links a.dim:hover { color: var(--ink-faint); }
+.nav-links a.dim::after { display: none; }
+
+/* Hamburger */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 4px;
+}
+.nav-toggle span {
+  display: block;
+  width: 24px;
+  height: 1px;
+  background: var(--ink-mid);
+  transition: all 0.3s;
+}
+
+/* ================================================
+   ORNAMENTAL DIVIDERS
+   ================================================ */
+.ornament {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 2.5rem auto;
+  width: 100%;
+  max-width: var(--max-w);
+}
+
+.ornament::before,
+.ornament::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-border));
+}
+
+.ornament::after {
+  background: linear-gradient(90deg, var(--gold-border), transparent);
+}
+
+.ornament-symbol {
+  color: var(--gold);
+  font-size: 1.1rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* SVG ornament inline */
+.ornament-svg {
+  width: 120px;
+  height: 20px;
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 0.8;
+  opacity: 0.7;
+}
+
+/* ================================================
+   MAIN CONTENT WRAPPER
+   ================================================ */
+main {
+  flex: 1;
+  width: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 4rem 2rem;
+}
+
+/* ================================================
+   HERO (index)
+   ================================================ */
+.hero {
+  text-align: center;
+  padding: 5rem 0 3rem;
+}
+
+.hero-eyebrow {
+  font-family: 'EB Garamond', serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1.2rem;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.2s;
+}
+
+.hero-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.8rem, 8vw, 5rem);
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  color: var(--ink);
+  opacity: 0;
+  animation: fadeUp 0.9s ease forwards 0.4s;
+}
+
+.hero-name em {
+  font-style: italic;
+  color: var(--ink-mid);
+}
+
+.hero-title {
+  font-family: 'EB Garamond', serif;
+  font-size: 1rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-light);
+  margin-top: 1rem;
+  opacity: 0;
+  animation: fadeUp 0.9s ease forwards 0.6s;
+}
+
+/* ================================================
+   BIO SECTION
+   ================================================ */
+.bio {
+  text-align: center;
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+.bio-text {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.2rem;
+  line-height: 1.9;
+  color: var(--ink-mid);
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 0.9s;
+}
+
+.bio-text strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.bio-text em {
+  color: var(--gold);
+  font-style: italic;
+}
+
+/* ================================================
+   SOCIAL LINKS (index)
+   ================================================ */
+.socials {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 3rem;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 1.2s;
+}
+
+.social-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+  color: var(--ink-light);
+  transition: color 0.25s, transform 0.25s;
+}
+
+.social-link:hover {
+  color: var(--gold);
+  transform: translateY(-3px);
+}
+
+.social-link svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.5;
+  display: block;
+  margin: 0 auto;
+}
+
+.social-link span {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ================================================
+   PAGE HEADER (páginas internas)
+   ================================================ */
+.page-header {
+  text-align: center;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--gold-border);
+  margin-bottom: 3rem;
+}
+
+.page-header h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+}
+
+.page-header p {
+  font-size: 0.9rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-top: 0.5rem;
+}
+
+/* ================================================
+   CARDS / GRID
+   ================================================ */
+.cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.card {
+  border: 1px solid var(--gold-border);
+  padding: 2rem 1.8rem;
+  background: var(--gold-pale);
+  transition: border-color 0.25s, background 0.25s, transform 0.25s;
+  position: relative;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 6px; left: 6px; right: -6px; bottom: -6px;
+  border: 1px solid var(--gold-border);
+  z-index: -1;
+  transition: opacity 0.25s;
+  opacity: 0.5;
+}
+
+.card:hover {
+  border-color: var(--gold);
+  background: rgba(184, 145, 42, 0.06);
+  transform: translate(-2px, -2px);
+}
+
+.card:hover::before {
+  opacity: 0;
+}
+
+.card h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+
+.card p {
+  font-size: 0.95rem;
+  color: var(--ink-light);
+  line-height: 1.6;
+}
+
+.card .card-tag {
+  display: inline-block;
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border-bottom: 1px solid var(--gold-border);
+  padding-bottom: 1px;
+}
+
+.card a {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+/* Coming Soon card */
+.card.coming-soon {
+  opacity: 0.55;
+  border-style: dashed;
+}
+
+.card.coming-soon::before { display: none; }
+
+/* ================================================
+   LINKS PAGE
+   ================================================ */
+.links-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.link-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 0;
+  border-bottom: 1px solid var(--gold-border);
+  text-decoration: none;
+  color: var(--ink);
+  transition: color 0.2s, padding-left 0.2s;
+  gap: 1rem;
+}
+
+.link-item:hover {
+  color: var(--gold);
+  padding-left: 0.4rem;
+}
+
+.link-item-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.link-item-icon {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--gold-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.link-item:hover .link-item-icon {
+  border-color: var(--gold);
+  background: var(--gold-pale);
+}
+
+.link-item-icon svg {
+  width: 16px;
+  height: 16px;
+  stroke: var(--gold);
+  fill: none;
+  stroke-width: 1.5;
+}
+
+.link-item-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+
+.link-item-desc {
+  font-size: 0.85rem;
+  color: var(--ink-faint);
+  font-style: italic;
+}
+
+.link-item-arrow {
+  font-size: 1rem;
+  color: var(--gold);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.link-item:hover .link-item-arrow { opacity: 1; }
+
+/* ================================================
+   ARTICLES PAGE
+   ================================================ */
+.articles-intro {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.articles-intro p {
+  color: var(--ink-light);
+  font-size: 1.05rem;
+  max-width: 480px;
+  margin: 0 auto 1.5rem;
+}
+
+.btn-primary {
+  display: inline-block;
+  padding: 0.7rem 2rem;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font-family: 'EB Garamond', serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: transparent;
+  transition: background 0.25s, color 0.25s;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: var(--gold);
+  color: var(--cream);
+}
+
+/* ================================================
+   PORTFOLIO PAGE
+   ================================================ */
+.portfolio-github-cta {
+  text-align: center;
+  padding: 3rem;
+  border: 1px solid var(--gold-border);
+  background: var(--gold-pale);
+  margin-bottom: 3rem;
+}
+
+.portfolio-github-cta h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.8rem;
+  font-weight: 400;
+  margin-bottom: 0.8rem;
+}
+
+.portfolio-github-cta p {
+  color: var(--ink-light);
+  margin-bottom: 1.5rem;
+}
+
+/* ================================================
+   FOOTER
+   ================================================ */
+footer {
+  text-align: center;
+  padding: 2rem;
+  border-top: 1px solid var(--gold-border);
+  margin-top: auto;
+}
+
+.footer-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+
+.footer-ornament {
+  color: var(--gold);
+  font-size: 0.9rem;
+  letter-spacing: 0.2em;
+  margin-bottom: 0.6rem;
+}
+
+footer p {
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+footer a {
+  color: var(--gold);
+  text-decoration: none;
+}
+
+/* ================================================
+   ANIMATIONS
+   ================================================ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Staggered word animation */
+.animate-word {
+  display: inline;
+  opacity: 0;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+/* ================================================
+   RESPONSIVE
+   ================================================ */
+@media (max-width: 640px) {
+  nav { padding: 1rem 1.4rem; }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%; left: 0; right: 0;
+    flex-direction: column;
+    background: var(--cream);
+    border-bottom: 1px solid var(--gold-border);
+    padding: 1rem 1.4rem 1.5rem;
+    gap: 1rem;
+  }
+
+  .nav-links.open { display: flex; }
+  .nav-toggle { display: flex; }
+
+  main { padding: 2.5rem 1.4rem; }
+  .hero { padding: 3rem 0 2rem; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .socials { gap: 1.5rem; }
+}
