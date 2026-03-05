@@ -21,6 +21,7 @@
       <li><a href="portfolio.html">Portfolio</a></li>
       <li><a href="articulos.html">Artículos</a></li>
       <li><a href="links.html" class="active">Links</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
     </ul>
   </nav>
 
@@ -83,7 +84,20 @@
 
     </ul>
 
-  </main>
+    <!-- TERMINAL LINK — se ha "colado" -->
+    <div id="terminal-link-wrap">
+      <a href="https://terminal.danielssal.com/" target="_blank" rel="noopener" id="terminal-link">
+        <div id="tl-scanlines"></div>
+        <div id="tl-inner">
+          <div id="tl-header">
+            <span id="tl-badge">// ACCESO NO AUTORIZADO</span>
+            <span id="tl-blink">█</span>
+          </div>
+          <div id="tl-path"></div>
+          <div id="tl-desc">Simulación de terminal &gt; Pulsa para acceder_</div>
+        </div>
+      </a>
+    </div>
 
   <footer>
     <div class="footer-inner">
@@ -92,10 +106,232 @@
     </div>
   </footer>
 
+  <style>
+    /* ── TERMINAL  */
+
+    #terminal-link-wrap {
+      margin-top: 2.8rem;
+      position: relative;
+      /* Ligera inclinación — no encaja del todo */
+      transform: rotate(-0.4deg);
+      transition: transform 0.2s;
+    }
+
+    #terminal-link-wrap:hover {
+      transform: rotate(0deg);
+    }
+
+    /* Etiqueta flotante de "intrusión" */
+    #terminal-link-wrap::before {
+      content: 'INTRUSO';
+      position: absolute;
+      top: -10px;
+      left: 18px;
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      background: #0a1a0a;
+      color: #00c832;
+      border: 1px solid #00c832;
+      padding: 1px 6px;
+      z-index: 2;
+      box-shadow: 0 0 6px rgba(0,200,50,0.4);
+    }
+
+    #terminal-link {
+      display: block;
+      text-decoration: none;
+      background: #050d05;
+      border: 1px solid #00c832;
+      box-shadow:
+        0 0 0 1px #050d05,
+        0 0 12px rgba(0,200,50,0.25),
+        inset 0 0 30px rgba(0,200,50,0.04);
+      padding: 1.4rem 1.6rem;
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow 0.2s;
+    }
+
+    #terminal-link:hover {
+      box-shadow:
+        0 0 0 1px #050d05,
+        0 0 24px rgba(0,200,50,0.45),
+        inset 0 0 40px rgba(0,200,50,0.08);
+    }
+
+    /* Efecto scanlines CRT */
+    #tl-scanlines {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.18) 2px,
+        rgba(0,0,0,0.18) 4px
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Flicker de pantalla CRT */
+    #terminal-link::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(0,200,50,0.03) 0%,
+        transparent 50%,
+        rgba(0,200,50,0.03) 100%
+      );
+      animation: tl-flicker 4s steps(1) infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes tl-flicker {
+      0%,96%,100% { opacity: 1; }
+      97%          { opacity: 0.6; }
+      98%          { opacity: 1; }
+      99%          { opacity: 0.7; }
+    }
+
+    /* Línea de "señal" que barre de arriba a abajo */
+    #terminal-link::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(0,200,50,0.15), transparent);
+      animation: tl-sweep 3s linear infinite;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    @keyframes tl-sweep {
+      from { top: -2px; }
+      to   { top: 100%; }
+    }
+
+    #tl-inner {
+      position: relative;
+      z-index: 3;
+    }
+
+    #tl-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.7rem;
+    }
+
+    #tl-badge {
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      color: #00c832;
+      opacity: 0.7;
+    }
+
+    #tl-blink {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: #00c832;
+      animation: tl-cursor 1s steps(1) infinite;
+      line-height: 1;
+    }
+
+    @keyframes tl-cursor {
+      0%, 49% { opacity: 1; }
+      50%,100% { opacity: 0; }
+    }
+
+    #tl-path {
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-size: 1.05rem;
+      color: #00ff41;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 8px rgba(0,255,65,0.6);
+      min-height: 1.4em;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    #tl-desc {
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-size: 0.72rem;
+      color: #00c832;
+      opacity: 0.55;
+      letter-spacing: 0.06em;
+    }
+
+    /* Glitch en hover */
+    #terminal-link:hover #tl-path {
+      animation: tl-glitch 0.3s steps(1) 1;
+    }
+
+    @keyframes tl-glitch {
+      0%   { transform: none; color: #00ff41; }
+      20%  { transform: translateX(-3px) skewX(-2deg); color: #ff0041; clip-path: inset(20% 0 60% 0); }
+      40%  { transform: translateX(3px) skewX(1deg);  color: #00ffff; clip-path: inset(60% 0 10% 0); }
+      60%  { transform: translateX(-2px); color: #00ff41; clip-path: none; }
+      80%  { transform: translateX(1px); color: #00ff41; }
+      100% { transform: none; color: #00ff41; }
+    }
+
+    /* ACCESS GRANTED en hover */
+    #terminal-link-wrap::after {
+      content: '[ ACCESS GRANTED ]';
+      position: absolute;
+      bottom: -9px;
+      right: 18px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      background: #050d05;
+      color: #00c832;
+      padding: 1px 6px;
+      border: 1px solid #00c832;
+      opacity: 0;
+      transition: opacity 0.2s;
+      z-index: 2;
+      box-shadow: 0 0 6px rgba(0,200,50,0.4);
+    }
+
+    #terminal-link-wrap:hover::after {
+      opacity: 1;
+    }
+  </style>
+
   <script>
-    const toggle = document.getElementById('navToggle');
-    const navLinks = document.getElementById('navLinks');
-    toggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+    document.getElementById('navToggle').addEventListener('click', () => {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+
+    // Typewriter para la URL de la terminal
+    const target   = document.getElementById('tl-path');
+    const fullText = '> terminal.danielssal.com/';
+    let   idx      = 0;
+
+    function typeChar() {
+      if (idx < fullText.length) {
+        target.textContent += fullText[idx++];
+        setTimeout(typeChar, 45 + Math.random() * 40);
+      }
+    }
+
+    // Arrancar el typewriter cuando el elemento sea visible
+    const observer = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        setTimeout(typeChar, 400);
+        observer.disconnect();
+      }
+    }, { threshold: 0.5 });
+
+    observer.observe(target);
   </script>
 
   <script defer src="/_vercel/speed-insights/script.js"></script>
