@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galería · Daniel Sánchez Salvador</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .coming-soon-hero {
+      text-align: center;
+      padding: 5rem 2rem;
+    }
+    .coming-soon-hero .label {
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+    }
+    .coming-soon-hero h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.5rem;
+      font-weight: 300;
+      color: var(--ink-light);
+      margin-bottom: 1rem;
+    }
+    .coming-soon-hero p {
+      color: var(--ink-faint);
+      font-style: italic;
+      font-size: 1.05rem;
+    }
+    .frame {
+      width: 120px;
+      height: 120px;
+      border: 1px solid var(--gold-border);
+      margin: 0 auto 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .frame::before, .frame::after {
+      content: '';
+      position: absolute;
+      border: 1px solid var(--gold-border);
+    }
+    .frame::before { inset: 6px; }
+    .frame::after  { inset: 12px; }
+    .frame-inner {
+      font-size: 2rem;
+      color: var(--gold);
+      opacity: 0.4;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">D<span>.</span>S<span>.</span>S<span>.</span></a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="portfolio.html">Portfolio</a></li>
+      <li><a href="galeria.html" class="active">Galería</a></li>
+      <li><a href="articulos.html">Artículos</a></li>
+      <li><a href="links.html">Links</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+    <div class="page-header">
+      <h1>Galería</h1>
+      <p>Imágenes & Visual</p>
+    </div>
+
+    <div class="coming-soon-hero">
+      <div class="frame">
+        <span class="frame-inner">◻</span>
+      </div>
+      <p class="label">Próximamente</p>
+      <h2>Esta sección está en construcción</h2>
+      <p>Pronto habrá algo que ver aquí.</p>
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-ornament">— ✦ —</div>
+      <p>© MMXXVI Daniel Sánchez Salvador · <a href="index.html">danielssal.com</a></p>
+    </div>
+  </footer>
+
+  <script>
+    const toggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+    toggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+  </script>
+
+</body>
+</html>

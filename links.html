@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Links · Daniel Sánchez Salvador</title>
+  <meta name="description" content="Links de Daniel Sánchez Salvador.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">D<span>.</span>S<span>.</span>S<span>.</span></a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="portfolio.html">Portfolio</a></li>
+      <li><a href="galeria.html" class="dim">Galería</a></li>
+      <li><a href="articulos.html">Artículos</a></li>
+      <li><a href="links.html" class="active">Links</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+    <div class="page-header">
+      <h1>Links</h1>
+      <p>Todos mis rincones en la red</p>
+    </div>
+
+    <ul class="links-list">
+
+      <!-- GitHub -->
+      <li>
+        <a href="https://github.com/dan1max" target="_blank" rel="noopener" class="link-item">
+          <div class="link-item-left">
+            <div class="link-item-icon">
+              <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <div class="link-item-name">GitHub</div>
+              <div class="link-item-desc">Repositorios y proyectos</div>
+            </div>
+          </div>
+          <span class="link-item-arrow">→</span>
+        </a>
+      </li>
+
+      <!-- Substack -->
+      <li>
+        <a href="https://daniconomics.substack.com" target="_blank" rel="noopener" class="link-item">
+          <div class="link-item-left">
+            <div class="link-item-icon">
+              <svg viewBox="0 0 24 24"><path d="M22 5H2v3h20V5zM2 10.5h20V21L12 15.5 2 21V10.5z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <div class="link-item-name">Substack — Daniconomics</div>
+              <div class="link-item-desc">Artículos de economía y tecnología</div>
+            </div>
+          </div>
+          <span class="link-item-arrow">→</span>
+        </a>
+      </li>
+
+      <!-- Instagram -->
+      <li>
+        <a href="https://www.instagram.com/creo_que_dani" target="_blank" rel="noopener" class="link-item">
+          <div class="link-item-left">
+            <div class="link-item-icon">
+              <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" stroke-linecap="round" stroke-linejoin="round"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <div class="link-item-name">Instagram</div>
+              <div class="link-item-desc">@creo_que_dani</div>
+            </div>
+          </div>
+          <span class="link-item-arrow">→</span>
+        </a>
+      </li>
+
+    </ul>
+
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-ornament">— ✦ —</div>
+      <p>© MMXXVI Daniel Sánchez Salvador · <a href="index.html">danielssal.com</a></p>
+    </div>
+  </footer>
+
+  <script>
+    const toggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+    toggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+  </script>
+
+</body>
+</html>
