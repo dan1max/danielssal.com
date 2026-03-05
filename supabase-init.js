@@ -13,7 +13,6 @@
     localStorage.setItem('dss_vid', vid);
   }
 
-  // /portfolio.html → "portfolio" | / → "index"
   const pageName = path
     .replace(/^\//, '')
     .replace(/\.html$/, '')
@@ -48,27 +47,31 @@
   heartbeat();
   setInterval(heartbeat, 30_000);
 
-  // Vía principal: reacción instantánea vía websocket
   db.channel('killswitch-live')
     .on(
       'postgres_changes',
       { event: 'UPDATE', schema: 'public', table: 'config', filter: 'key=eq.en_construccion' },
       (payload) => {
-        if (payload.new?.value === 'true') mostrarConstruccion();
+        if (payload.new?.value === 'true') {
+          mostrarConstruccion();
+        } else if (payload.new?.value === 'false') {
+          location.reload();
+        }
       }
     )
     .subscribe();
 
-  // Respaldo: si el websocket falla, activa en ≤30s
+  // Respaldo: si el websocket falla, activa/desactiva en ≤30s
   setInterval(async () => {
-    if (document.getElementById('dss-construccion')) return;
     try {
       const { data } = await db
         .from('config')
         .select('value')
         .eq('key', 'en_construccion')
         .single();
-      if (data?.value === 'true') mostrarConstruccion();
+      if (data?.value === 'true' && !document.getElementById('dss-construccion')) {
+        mostrarConstruccion();
+      }
     } catch (_) {}
   }, 30_000);
 
