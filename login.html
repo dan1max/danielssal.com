@@ -191,7 +191,48 @@
      * Luego reemplaza HASH_CORRECTO con el resultado.
      */
     const HASH_CORRECTO = '04de6e356a97c9add6cdc454496c3117a486d4e56e9d32dd32594ad517a1c95e';
-    // ↑ Este es el hash de "dss2026". Cámbialo después del primer login.
+
+    // ── RATE LIMITING: bloqueo tras 5 intentos fallidos ────────
+    const RL_KEY      = 'dss_login_attempts';
+    const RL_KEY_TIME = 'dss_login_lockout';
+    const MAX_INTENTOS  = 5;
+    const LOCKOUT_MS    = 15 * 60 * 1000; // 15 minutos
+
+    function comprobarBloqueo() {
+      const lockoutUntil = parseInt(localStorage.getItem(RL_KEY_TIME) || '0');
+      if (Date.now() < lockoutUntil) {
+        const mins = Math.ceil((lockoutUntil - Date.now()) / 60000);
+        mostrarError(`Demasiados intentos. Espera ${mins} min.`);
+        document.getElementById('loginBtn').disabled = true;
+        document.getElementById('pwd').disabled = true;
+        return true;
+      }
+      return false;
+    }
+
+    function registrarFallo() {
+      const intentos = parseInt(localStorage.getItem(RL_KEY) || '0') + 1;
+      localStorage.setItem(RL_KEY, intentos);
+      if (intentos >= MAX_INTENTOS) {
+        localStorage.setItem(RL_KEY_TIME, Date.now() + LOCKOUT_MS);
+        localStorage.setItem(RL_KEY, '0');
+        mostrarError('Demasiados intentos. Bloqueado 15 min.');
+        document.getElementById('loginBtn').disabled = true;
+        document.getElementById('pwd').disabled = true;
+      } else {
+        mostrarError(`Contraseña incorrecta. (${intentos}/${MAX_INTENTOS})`);
+      }
+    }
+
+    function mostrarError(msg) {
+      const el = document.getElementById('errorMsg');
+      el.textContent = msg;
+      el.classList.add('visible');
+      setTimeout(() => el.classList.remove('visible'), 4000);
+    }
+
+    // Comprobar bloqueo al cargar
+    comprobarBloqueo();
 
     async function sha256(str) {
       const buf = await crypto.subtle.digest(
@@ -204,9 +245,10 @@
     }
 
     async function intentarLogin() {
-      const pwd = document.getElementById('pwd').value;
-      const error = document.getElementById('errorMsg');
-      const btn = document.getElementById('loginBtn');
+      if (comprobarBloqueo()) return;
+
+      const pwd   = document.getElementById('pwd').value;
+      const btn   = document.getElementById('loginBtn');
 
       if (!pwd) return;
 
@@ -216,16 +258,15 @@
       const hash = await sha256(pwd);
 
       if (hash === HASH_CORRECTO) {
-        // Guardar sesión (dura mientras el tab esté abierto)
+        localStorage.setItem(RL_KEY, '0'); // resetear contador
         sessionStorage.setItem('dss_admin', '1');
-        window.location.href = 'panel.html';
+        window.location.replace('panel.html');
       } else {
-        error.classList.add('visible');
+        registrarFallo();
         btn.textContent = 'Acceder →';
         btn.disabled = false;
         document.getElementById('pwd').value = '';
         document.getElementById('pwd').focus();
-        setTimeout(() => error.classList.remove('visible'), 3000);
       }
     }
 
