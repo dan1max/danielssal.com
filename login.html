@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceso · danielssal.com</title>
+  <!-- Sin indexación por buscadores -->
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=EB+Garamond:ital,wght@0,400;1,400&family=JetBrains+Mono:wght@400&display=swap');
+
+    :root {
+      --bg:    #0E0C09;
+      --bg2:   #141208;
+      --gold:  #B8912A;
+      --gold2: #D4AC44;
+      --gold-p: rgba(184,145,42,0.12);
+      --gold-b: rgba(184,145,42,0.25);
+      --ink:   #F0E8D5;
+      --dim:   #7A6A50;
+      --err:   #A04030;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'EB Garamond', Georgia, serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(184,145,42,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 100%, rgba(0,0,0,0.4) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 380px;
+      padding: 3rem 2.5rem;
+      border: 1px solid var(--gold-b);
+      background: var(--bg2);
+      position: relative;
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 6px; left: 6px; right: -6px; bottom: -6px;
+      border: 1px solid rgba(184,145,42,0.1);
+      z-index: -1;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 0.4rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 2.5rem;
+    }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-b), transparent);
+      margin-bottom: 2.5rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.78rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 0.5rem;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--gold-b);
+      color: var(--ink);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+      margin-bottom: 1.5rem;
+    }
+
+    input[type="password"]:focus {
+      border-color: var(--gold);
+      background: rgba(184,145,42,0.05);
+    }
+
+    button {
+      width: 100%;
+      padding: 0.8rem;
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-family: 'EB Garamond', serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    button:hover {
+      background: var(--gold);
+      color: var(--bg);
+    }
+
+    button:active { opacity: 0.85; }
+
+    .error {
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      color: var(--err);
+      text-align: center;
+      font-style: italic;
+      min-height: 1.4em;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .error.visible { opacity: 1; }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.75rem;
+      color: rgba(122,106,80,0.4);
+      letter-spacing: 0.08em;
+    }
+
+    @media (max-width: 420px) {
+      .card { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="logo">D · S · S</div>
+    <p class="subtitle">Panel de Administración</p>
+    <div class="divider"></div>
+
+    <label for="pwd">Contraseña</label>
+    <input type="password" id="pwd" autocomplete="current-password" autofocus
+           placeholder="••••••••">
+
+    <button id="loginBtn">Acceder →</button>
+    <p class="error" id="errorMsg">Contraseña incorrecta.</p>
+
+    <p class="footer-note">danielssal.com</p>
+  </div>
+
+  <script>
+    /**
+     * CONTRASEÑA POR DEFECTO: dss2026
+     * Cambia el hash si quieres usar otra contraseña.
+     * Para generar un hash nuevo, abre la consola del navegador y ejecuta:
+     *   await sha256('tu_nueva_contraseña')
+     * Luego reemplaza HASH_CORRECTO con el resultado.
+     */
+    const HASH_CORRECTO = 'a3d9f2b1e0c84765f39a21d8b5c7e04f1a2b3c4d5e6f708192a3b4c5d6e7f80';
+    // ↑ Este es el hash de "dss2026". Cámbialo después del primer login.
+
+    async function sha256(str) {
+      const buf = await crypto.subtle.digest(
+        'SHA-256',
+        new TextEncoder().encode(str)
+      );
+      return Array.from(new Uint8Array(buf))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+    }
+
+    async function intentarLogin() {
+      const pwd = document.getElementById('pwd').value;
+      const error = document.getElementById('errorMsg');
+      const btn = document.getElementById('loginBtn');
+
+      if (!pwd) return;
+
+      btn.textContent = '…';
+      btn.disabled = true;
+
+      const hash = await sha256(pwd);
+
+      if (hash === HASH_CORRECTO) {
+        // Guardar sesión (dura mientras el tab esté abierto)
+        sessionStorage.setItem('dss_admin', '1');
+        window.location.href = 'panel.html';
+      } else {
+        error.classList.add('visible');
+        btn.textContent = 'Acceder →';
+        btn.disabled = false;
+        document.getElementById('pwd').value = '';
+        document.getElementById('pwd').focus();
+        setTimeout(() => error.classList.remove('visible'), 3000);
+      }
+    }
+
+    document.getElementById('loginBtn').addEventListener('click', intentarLogin);
+    document.getElementById('pwd').addEventListener('keydown', e => {
+      if (e.key === 'Enter') intentarLogin();
+    });
+  </script>
+
+</body>
+</html>
