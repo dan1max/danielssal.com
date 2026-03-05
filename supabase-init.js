@@ -1,39 +1,25 @@
-/**
- * supabase-init.js — danielssal.com
- * Killswitch, tracking de visitas, heartbeat de visitantes activos.
- *
- * FIXES aplicados:
- * - sendBeacon eliminado (no soporta DELETE — siempre enviaba POST).
- *   La limpieza de visitantes_activos se delega a un cron job SQL.
- * - pageName normalizado correctamente (sin slash, sin .html)
- */
-
 (async function () {
   const path = window.location.pathname;
   if (path.includes('login') || path.includes('panel')) return;
 
-  // ── CLIENTE SUPABASE ───────────────────────────────────────
   const SUPA_URL = 'https://ivljbqgfxrlielbvezqn.supabase.co';
   const SUPA_KEY = 'sb_publishable_dKceDbEg-yxo7vEtc3M7Ag_M3xeDHx6';
   const { createClient } = supabase;
   const db = createClient(SUPA_URL, SUPA_KEY);
 
-  // ── VISITOR ID (persistente por navegador) ─────────────────
   let vid = localStorage.getItem('dss_vid');
   if (!vid) {
     vid = crypto.randomUUID();
     localStorage.setItem('dss_vid', vid);
   }
 
-  // ── NORMALIZAR NOMBRE DE PÁGINA ────────────────────────────
-  // /portfolio.html → "portfolio" | / → "index" | /index.html → "index"
+  // /portfolio.html → "portfolio" | / → "index"
   const pageName = path
     .replace(/^\//, '')
     .replace(/\.html$/, '')
     .replace(/\/$/, '')
     || 'index';
 
-  // ── KILLSWITCH ─────────────────────────────────────────────
   try {
     const { data } = await db
       .from('config')
@@ -45,18 +31,14 @@
       mostrarConstruccion();
       return;
     }
-  } catch (_) {
-    // Si Supabase falla, la web sigue funcionando normalmente
-  }
+  } catch (_) {}
 
-  // ── TRACKING DE VISITA ─────────────────────────────────────
   const sessionKey = `dss_visited_${pageName}`;
   if (!sessionStorage.getItem(sessionKey)) {
     sessionStorage.setItem(sessionKey, '1');
     db.from('visitas').insert([{ visitor_id: vid, page: pageName }]).then(() => {});
   }
 
-  // ── HEARTBEAT: visitantes activos ─────────────────────────
   async function heartbeat() {
     await db.from('visitantes_activos').upsert(
       [{ visitor_id: vid, last_seen: new Date().toISOString(), page: pageName }],
@@ -66,23 +48,30 @@
   heartbeat();
   setInterval(heartbeat, 30_000);
 
-  // ── REALTIME: recibir killswitch en tiempo real ────────────
-  // Cuando el admin active "En Construcción" desde el panel,
-  // TODOS los visitantes activos ven el overlay de inmediato sin recargar.
+  // Vía principal: reacción instantánea vía websocket
   db.channel('killswitch-live')
     .on(
       'postgres_changes',
       { event: 'UPDATE', schema: 'public', table: 'config', filter: 'key=eq.en_construccion' },
       (payload) => {
-        if (payload.new?.value === 'true') {
-          mostrarConstruccion();
-        }
+        if (payload.new?.value === 'true') mostrarConstruccion();
       }
     )
     .subscribe();
 
+  // Respaldo: si el websocket falla, activa en ≤30s
+  setInterval(async () => {
+    if (document.getElementById('dss-construccion')) return;
+    try {
+      const { data } = await db
+        .from('config')
+        .select('value')
+        .eq('key', 'en_construccion')
+        .single();
+      if (data?.value === 'true') mostrarConstruccion();
+    } catch (_) {}
+  }, 30_000);
 
-  // ── OVERLAY "EN CONSTRUCCIÓN" ──────────────────────────────
   function mostrarConstruccion() {
     if (!document.querySelector('link[href*="Cormorant"]')) {
       const link = document.createElement('link');
@@ -117,12 +106,6 @@
         content:''; position:absolute; inset:24px;
         border:1px solid rgba(120,100,70,0.15); pointer-events:none;
       }
-      #dss-c-eyebrow {
-        font-family:'EB Garamond','Garamond',Georgia,serif;
-        font-size:clamp(0.65rem,2vw,0.8rem); letter-spacing:0.28em;
-        text-transform:uppercase; color:rgba(80,60,30,0.55); margin-bottom:2rem;
-        text-shadow:0 1px 0 rgba(255,255,255,0.4),0 -1px 0 rgba(0,0,0,0.15);
-      }
       #dss-c-title {
         font-family:'Cormorant Garamond','Garamond',Georgia,serif;
         font-size:clamp(2.8rem,10vw,7rem); font-weight:300;
@@ -132,20 +115,12 @@
         background:linear-gradient(180deg,#6B5030 0%,#4A3520 50%,#7A6040 100%);
         -webkit-background-clip:text; background-clip:text;
       }
-      #dss-c-ornament {
-        color:rgba(130,100,55,0.4); font-size:1.2rem;
-        margin:1.5rem 0; letter-spacing:0.5em;
-        text-shadow:0 1px 0 rgba(255,255,255,0.4),0 -1px 0 rgba(0,0,0,0.12);
-      }
     `;
     document.head.appendChild(style);
 
     const overlay = document.createElement('div');
     overlay.id = 'dss-construccion';
-    // Solo el título — sin subtexto
-    overlay.innerHTML = '<p id="dss-c-eyebrow">danielssal.com</p>'
-      + '<h1 id="dss-c-title">En<br>Construcci\u00f3n</h1>'
-      + '<div id="dss-c-ornament">\u2014 \u2736 \u2014</div>';
+    overlay.innerHTML = '<h1 id="dss-c-title">En<br>Construcci\u00f3n</h1>';
     document.body.appendChild(overlay);
 
     window.addEventListener('keydown', e => e.preventDefault(), true);
