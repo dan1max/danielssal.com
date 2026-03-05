@@ -142,33 +142,6 @@
     .alert-on.visible { display: flex; }
     .alert-dot { width:8px; height:8px; border-radius:50%; background:#C85040; flex-shrink:0; animation:pulse 1s infinite; }
 
-    .pages-table { width: 100%; border-collapse: collapse; }
-    .pages-table th {
-      font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
-      color: var(--dim); text-align: left; padding: 0.6rem 1rem;
-      border-bottom: 1px solid var(--gold-b); font-weight: 400;
-    }
-    .pages-table td {
-      padding: 0.8rem 1rem; border-bottom: 1px solid rgba(184,145,42,0.08);
-      color: var(--ink2); font-family: 'JetBrains Mono', monospace; font-size: 0.82rem;
-    }
-    .pages-table td:last-child {
-      font-family: 'Cormorant Garamond', serif; font-size: 1.1rem;
-      color: var(--gold); text-align: right;
-    }
-
-    .refresh-row { display:flex; align-items:center; justify-content:flex-end; gap:1rem; margin-bottom:1rem; }
-    .last-updated { font-size:0.75rem; color:var(--dim); font-style:italic; }
-
-    .btn-refresh {
-      background: none; border: 1px solid var(--gold-b); color: var(--dim);
-      padding: 0.3rem 0.8rem; font-family: 'EB Garamond', serif;
-      font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
-      cursor: pointer; transition: color 0.2s, border-color 0.2s;
-    }
-    .btn-refresh:hover { color: var(--gold); border-color: var(--gold-b); }
-
-    .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--gold-b), transparent); margin: 2.5rem 0; }
 
     footer {
       text-align: center; padding: 2rem; border-top: 1px solid var(--gold-b);
@@ -220,22 +193,6 @@
       </div>
     </div>
 
-    <p class="section-label">Páginas</p>
-    <div class="refresh-row">
-      <span class="last-updated" id="lastUpdated"></span>
-      <button class="btn-refresh" id="refreshBtn">↺ Actualizar</button>
-    </div>
-    <table class="pages-table">
-      <thead>
-        <tr><th>Página</th><th style="text-align:right">Visitas</th></tr>
-      </thead>
-      <tbody id="pagesBody">
-        <tr><td colspan="2" style="color:var(--dim);font-style:italic;font-family:'EB Garamond',serif;font-size:0.88rem">Cargando…</td></tr>
-      </tbody>
-    </table>
-
-    <div class="divider"></div>
-
     <p class="section-label">Control del sitio</p>
     <div class="killswitch-card">
       <div class="killswitch-inner">
@@ -268,17 +225,6 @@
 
     let construccionActiva = false;
 
-    // ── SANITIZAR para prevenir XSS al renderizar datos de la DB ──
-    function sanitize(str) {
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#x27;');
-    }
-
-    // ── STATS ──────────────────────────────────────────────────────
     async function cargarStats() {
       const { count: total } = await db
         .from('visitas')
@@ -297,50 +243,9 @@
         .select('*', { count: 'exact', head: true })
         .gte('last_seen', hace5);
 
-      const { data: paginas } = await db
-        .from('visitas')
-        .select('page');
-
       setStatValue('statTotal',   total   ?? 0);
       setStatValue('statUnicos',  unicos  ?? 0);
       setStatValue('statActivos', activos ?? 0);
-
-      if (paginas) {
-        const conteo = paginas.reduce((acc, v) => {
-          acc[v.page] = (acc[v.page] || 0) + 1;
-          return acc;
-        }, {});
-        const sorted = Object.entries(conteo).sort((a, b) => b[1] - a[1]);
-        const tbody = document.getElementById('pagesBody');
-
-        if (sorted.length === 0) {
-          // Usando textContent en lugar de innerHTML para el mensaje
-          const tr = document.createElement('tr');
-          const td = document.createElement('td');
-          td.colSpan = 2;
-          td.style.cssText = 'color:var(--dim);font-style:italic;font-family:EB Garamond,serif';
-          td.textContent = 'Sin visitas registradas aún.';
-          tr.appendChild(td);
-          tbody.innerHTML = '';
-          tbody.appendChild(tr);
-        } else {
-          tbody.innerHTML = '';
-          sorted.forEach(([page, n]) => {
-            const tr = document.createElement('tr');
-            const tdPage = document.createElement('td');
-            const tdN    = document.createElement('td');
-            // textContent previene XSS — datos de DB nunca van a innerHTML directamente
-            tdPage.textContent = '/' + (page === 'index' ? '' : sanitize(page));
-            tdN.textContent    = n.toLocaleString('es-ES');
-            tr.appendChild(tdPage);
-            tr.appendChild(tdN);
-            tbody.appendChild(tr);
-          });
-        }
-      }
-
-      document.getElementById('lastUpdated').textContent =
-        'Actualizado: ' + new Date().toLocaleTimeString('es-ES');
     }
 
     function setStatValue(id, value) {
@@ -408,9 +313,6 @@
       }
     });
 
-    document.getElementById('refreshBtn').addEventListener('click', cargarStats);
-
-    // Auto-refresh activos cada 30s
     setInterval(async () => {
       const hace5 = new Date(Date.now() - 5 * 60 * 1000).toISOString();
       const { count } = await db
