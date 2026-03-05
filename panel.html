@@ -5,370 +5,174 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panel · danielssal.com</title>
   <meta name="robots" content="noindex, nofollow">
+  <!-- Anti-flash: ocultar body hasta verificar sesión -->
+  <style>body { visibility: hidden; }</style>
+  <script>
+    // Verificación ANTES de renderizar — evita flash de contenido
+    if (!sessionStorage.getItem('dss_admin')) {
+      window.location.replace('login.html');
+    } else {
+      document.addEventListener('DOMContentLoaded', () => {
+        document.body.style.visibility = 'visible';
+      });
+    }
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
 
     :root {
-      --bg:     #0E0C09;
-      --bg2:    #141208;
-      --bg3:    #1A1710;
-      --gold:   #B8912A;
-      --gold2:  #D4AC44;
-      --gold-p: rgba(184,145,42,0.10);
-      --gold-b: rgba(184,145,42,0.22);
-      --ink:    #F0E8D5;
-      --ink2:   #C8B898;
-      --dim:    #7A6A50;
-      --red:    #8B3A2A;
-      --red-p:  rgba(139,58,42,0.15);
-      --red-b:  rgba(139,58,42,0.35);
-      --green:  #3A6B3A;
-      --green-p:rgba(58,107,58,0.12);
-      --green-b:rgba(58,107,58,0.35);
+      --bg:     #0E0C09; --bg2: #141208; --bg3: #1A1710;
+      --gold:   #B8912A; --gold2: #D4AC44;
+      --gold-p: rgba(184,145,42,0.10); --gold-b: rgba(184,145,42,0.22);
+      --ink:    #F0E8D5; --ink2: #C8B898; --dim: #7A6A50;
+      --red:    #8B3A2A; --red-p: rgba(139,58,42,0.15); --red-b: rgba(139,58,42,0.35);
+      --green:  #3A6B3A; --green-p: rgba(58,107,58,0.12); --green-b: rgba(58,107,58,0.35);
     }
 
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     html, body {
-      background: var(--bg);
-      color: var(--ink);
+      background: var(--bg); color: var(--ink);
       font-family: 'EB Garamond', Georgia, serif;
-      font-size: 17px;
-      min-height: 100vh;
+      font-size: 17px; min-height: 100vh;
     }
 
     body::before {
-      content: '';
-      display: block;
-      height: 2px;
+      content: ''; display: block; height: 2px;
       background: linear-gradient(90deg, transparent, var(--gold) 30%, var(--gold2) 50%, var(--gold) 70%, transparent);
     }
 
-    /* ── NAV ── */
     nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1.2rem 2.5rem;
-      border-bottom: 1px solid var(--gold-b);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 2.5rem; border-bottom: 1px solid var(--gold-b);
     }
 
-    .nav-logo {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.2rem;
-      letter-spacing: 0.15em;
-      color: var(--gold);
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-    }
-
-    .nav-badge {
-      font-size: 0.72rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--dim);
-      font-family: 'EB Garamond', serif;
-    }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; letter-spacing: 0.15em; color: var(--gold); }
+    .nav-right { display: flex; align-items: center; gap: 1.5rem; }
+    .nav-badge { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--dim); }
 
     .btn-logout {
-      font-size: 0.75rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--dim);
-      background: none;
-      border: 1px solid rgba(122,106,80,0.3);
-      padding: 0.3rem 0.8rem;
-      cursor: pointer;
-      font-family: 'EB Garamond', serif;
+      font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--dim); background: none; border: 1px solid rgba(122,106,80,0.3);
+      padding: 0.3rem 0.8rem; cursor: pointer; font-family: 'EB Garamond', serif;
       transition: color 0.2s, border-color 0.2s;
     }
-
     .btn-logout:hover { color: var(--ink); border-color: var(--dim); }
 
-    /* ── MAIN ── */
-    main {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 3rem 2rem;
-    }
+    main { max-width: 900px; margin: 0 auto; padding: 3rem 2rem; }
 
-    /* ── SECTION TITLE ── */
     .section-label {
-      font-size: 0.72rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 1.2rem;
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
+      font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1.2rem;
+      display: flex; align-items: center; gap: 0.8rem;
     }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--gold-b); }
 
-    .section-label::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--gold-b);
-    }
-
-    /* ── STATS GRID ── */
     .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--gold-b);
-      border: 1px solid var(--gold-b);
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: var(--gold-b); border: 1px solid var(--gold-b);
       margin-bottom: 3rem;
     }
 
-    .stat-card {
-      background: var(--bg2);
-      padding: 1.8rem 1.5rem;
-      text-align: center;
-      position: relative;
-    }
+    .stat-card { background: var(--bg2); padding: 1.8rem 1.5rem; text-align: center; }
 
     .stat-value {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 3rem;
-      font-weight: 300;
-      color: var(--gold);
-      line-height: 1;
-      margin-bottom: 0.5rem;
-      min-height: 3rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 300;
+      color: var(--gold); line-height: 1; margin-bottom: 0.5rem;
+      min-height: 3rem; display: flex; align-items: center; justify-content: center;
     }
 
     .stat-value.loading::after {
-      content: '';
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      border: 1px solid var(--gold-b);
-      border-top-color: var(--gold);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+      content: ''; display: inline-block; width: 16px; height: 16px;
+      border: 1px solid var(--gold-b); border-top-color: var(--gold);
+      border-radius: 50%; animation: spin 0.8s linear infinite;
     }
 
-    .stat-label {
-      font-size: 0.72rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--dim);
-    }
-
-    .stat-sub {
-      font-size: 0.78rem;
-      color: rgba(122,106,80,0.5);
-      font-style: italic;
-      margin-top: 0.3rem;
-    }
+    .stat-label { font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
+    .stat-sub { font-size: 0.78rem; color: rgba(122,106,80,0.5); font-style: italic; margin-top: 0.3rem; }
 
     .stat-live-dot {
-      display: inline-block;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #5A9A5A;
-      margin-right: 5px;
-      animation: pulse 2s infinite;
+      display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+      background: #5A9A5A; margin-right: 5px; animation: pulse 2s infinite;
     }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ── KILLSWITCH ── */
     .killswitch-card {
-      border: 1px solid var(--gold-b);
-      background: var(--bg2);
-      padding: 2rem;
-      margin-bottom: 3rem;
+      border: 1px solid var(--gold-b); background: var(--bg2);
+      padding: 2rem; margin-bottom: 3rem;
     }
 
     .killswitch-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 2rem;
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 2rem;
     }
 
     .killswitch-info h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.5rem;
-      font-weight: 400;
-      margin-bottom: 0.4rem;
+      font-family: 'Cormorant Garamond', serif; font-size: 1.5rem;
+      font-weight: 400; margin-bottom: 0.4rem;
     }
 
-    .killswitch-info p {
-      font-size: 0.88rem;
-      color: var(--dim);
-      line-height: 1.5;
-    }
-
-    .killswitch-status {
-      font-size: 0.72rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      margin-top: 0.6rem;
-    }
-
-    .killswitch-status.on  { color: var(--red); }
-    .killswitch-status.off { color: var(--green); }
+    .killswitch-info p { font-size: 0.88rem; color: var(--dim); line-height: 1.5; }
+    .killswitch-status { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; margin-top: 0.6rem; }
+    .killswitch-status.on  { color: #C85040; }
+    .killswitch-status.off { color: #6AAA6A; }
 
     .btn-killswitch {
-      flex-shrink: 0;
-      padding: 0.9rem 2rem;
-      font-family: 'EB Garamond', serif;
-      font-size: 0.85rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      cursor: pointer;
-      border: 1px solid;
-      transition: background 0.25s, color 0.25s;
-      min-width: 160px;
-      text-align: center;
+      flex-shrink: 0; padding: 0.9rem 2rem;
+      font-family: 'EB Garamond', serif; font-size: 0.85rem;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      cursor: pointer; border: 1px solid; transition: background 0.25s, color 0.25s;
+      min-width: 160px; text-align: center;
     }
 
-    .btn-killswitch.activar {
-      border-color: var(--red-b);
-      color: #C85040;
-      background: var(--red-p);
-    }
+    .btn-killswitch.activar   { border-color:var(--red-b); color:#C85040; background:var(--red-p); }
+    .btn-killswitch.activar:hover { background:var(--red); color:var(--ink); border-color:var(--red); }
+    .btn-killswitch.desactivar { border-color:var(--green-b); color:#6AAA6A; background:var(--green-p); }
+    .btn-killswitch.desactivar:hover { background:var(--green); color:var(--ink); border-color:var(--green); }
+    .btn-killswitch:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .btn-killswitch.activar:hover {
-      background: var(--red);
-      color: var(--ink);
-      border-color: var(--red);
-    }
-
-    .btn-killswitch.desactivar {
-      border-color: var(--green-b);
-      color: #6AAA6A;
-      background: var(--green-p);
-    }
-
-    .btn-killswitch.desactivar:hover {
-      background: var(--green);
-      color: var(--ink);
-      border-color: var(--green);
-    }
-
-    .btn-killswitch:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    /* Alert cuando killswitch está ON */
     .alert-on {
-      display: none;
-      background: var(--red-p);
-      border: 1px solid var(--red-b);
-      padding: 0.8rem 1.2rem;
-      margin-bottom: 2rem;
-      font-size: 0.88rem;
-      color: #C85040;
-      align-items: center;
-      gap: 0.8rem;
+      display: none; background: var(--red-p); border: 1px solid var(--red-b);
+      padding: 0.8rem 1.2rem; margin-bottom: 2rem; font-size: 0.88rem; color: #C85040;
+      align-items: center; gap: 0.8rem;
     }
-
     .alert-on.visible { display: flex; }
-    .alert-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: #C85040;
-      flex-shrink: 0;
-      animation: pulse 1s infinite;
-    }
+    .alert-dot { width:8px; height:8px; border-radius:50%; background:#C85040; flex-shrink:0; animation:pulse 1s infinite; }
 
-    /* ── TABLA DE PÁGINAS ── */
-    .pages-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
+    .pages-table { width: 100%; border-collapse: collapse; }
     .pages-table th {
-      font-size: 0.72rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--dim);
-      text-align: left;
-      padding: 0.6rem 1rem;
-      border-bottom: 1px solid var(--gold-b);
-      font-weight: 400;
+      font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--dim); text-align: left; padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--gold-b); font-weight: 400;
     }
-
     .pages-table td {
-      padding: 0.8rem 1rem;
-      font-size: 0.92rem;
-      border-bottom: 1px solid rgba(184,145,42,0.08);
-      color: var(--ink2);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.82rem;
+      padding: 0.8rem 1rem; border-bottom: 1px solid rgba(184,145,42,0.08);
+      color: var(--ink2); font-family: 'JetBrains Mono', monospace; font-size: 0.82rem;
     }
-
     .pages-table td:last-child {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.1rem;
-      color: var(--gold);
-      text-align: right;
+      font-family: 'Cormorant Garamond', serif; font-size: 1.1rem;
+      color: var(--gold); text-align: right;
     }
 
-    /* ── REFRESH ── */
-    .refresh-row {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .last-updated {
-      font-size: 0.75rem;
-      color: var(--dim);
-      font-style: italic;
-    }
+    .refresh-row { display:flex; align-items:center; justify-content:flex-end; gap:1rem; margin-bottom:1rem; }
+    .last-updated { font-size:0.75rem; color:var(--dim); font-style:italic; }
 
     .btn-refresh {
-      background: none;
-      border: 1px solid var(--gold-b);
-      color: var(--dim);
-      padding: 0.3rem 0.8rem;
-      font-family: 'EB Garamond', serif;
-      font-size: 0.75rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: color 0.2s, border-color 0.2s;
+      background: none; border: 1px solid var(--gold-b); color: var(--dim);
+      padding: 0.3rem 0.8rem; font-family: 'EB Garamond', serif;
+      font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+      cursor: pointer; transition: color 0.2s, border-color 0.2s;
     }
-
     .btn-refresh:hover { color: var(--gold); border-color: var(--gold-b); }
 
-    /* ── MISC ── */
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .divider {
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--gold-b), transparent);
-      margin: 2.5rem 0;
-    }
+    .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--gold-b), transparent); margin: 2.5rem 0; }
 
     footer {
-      text-align: center;
-      padding: 2rem;
-      border-top: 1px solid var(--gold-b);
-      font-size: 0.75rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--dim);
+      text-align: center; padding: 2rem; border-top: 1px solid var(--gold-b);
+      font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim);
     }
 
     @media (max-width: 640px) {
@@ -382,7 +186,6 @@
 </head>
 <body>
 
-  <!-- NAV -->
   <nav>
     <span class="nav-logo">D · S · S</span>
     <div class="nav-right">
@@ -393,13 +196,11 @@
 
   <main>
 
-    <!-- ALERT KILLSWITCH ACTIVO -->
     <div class="alert-on" id="alertOn">
       <div class="alert-dot"></div>
       <span>Modo <strong>En Construcción</strong> activo — La web está bloqueada para todos los visitantes.</span>
     </div>
 
-    <!-- STATS -->
     <p class="section-label">Visitantes</p>
     <div class="stats-grid">
       <div class="stat-card">
@@ -414,14 +215,11 @@
       </div>
       <div class="stat-card">
         <div class="stat-value loading" id="statActivos"></div>
-        <div class="stat-label">
-          <span class="stat-live-dot"></span>Activos ahora
-        </div>
+        <div class="stat-label"><span class="stat-live-dot"></span>Activos ahora</div>
         <div class="stat-sub">últimos 5 min</div>
       </div>
     </div>
 
-    <!-- PÁGINAS MÁS VISITADAS -->
     <p class="section-label">Páginas</p>
     <div class="refresh-row">
       <span class="last-updated" id="lastUpdated"></span>
@@ -429,10 +227,7 @@
     </div>
     <table class="pages-table">
       <thead>
-        <tr>
-          <th>Página</th>
-          <th style="text-align:right">Visitas</th>
-        </tr>
+        <tr><th>Página</th><th style="text-align:right">Visitas</th></tr>
       </thead>
       <tbody id="pagesBody">
         <tr><td colspan="2" style="color:var(--dim);font-style:italic;font-family:'EB Garamond',serif;font-size:0.88rem">Cargando…</td></tr>
@@ -441,7 +236,6 @@
 
     <div class="divider"></div>
 
-    <!-- KILLSWITCH -->
     <p class="section-label">Control del sitio</p>
     <div class="killswitch-card">
       <div class="killswitch-inner">
@@ -451,9 +245,7 @@
              Muestra una pantalla de mármol. Desactiva aquí para restaurar.</p>
           <p class="killswitch-status" id="killswitchStatus">Estado: cargando…</p>
         </div>
-        <button class="btn-killswitch activar" id="killBtn" disabled>
-          Cargando…
-        </button>
+        <button class="btn-killswitch activar" id="killBtn" disabled>Cargando…</button>
       </div>
     </div>
 
@@ -462,14 +254,9 @@
   <footer>danielssal.com · Panel Admin · Sesión activa</footer>
 
   <script>
-    // ── PROTEGER PANEL ─────────────────────────────────────────────
-    if (!sessionStorage.getItem('dss_admin')) {
-      window.location.href = 'login.html';
-    }
-
     document.getElementById('logoutBtn').addEventListener('click', () => {
       sessionStorage.removeItem('dss_admin');
-      window.location.href = 'login.html';
+      window.location.replace('login.html');
     });
 
     // ── SUPABASE ───────────────────────────────────────────────────
@@ -481,14 +268,22 @@
 
     let construccionActiva = false;
 
-    // ── CARGAR STATS ───────────────────────────────────────────────
+    // ── SANITIZAR para prevenir XSS al renderizar datos de la DB ──
+    function sanitize(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#x27;');
+    }
+
+    // ── STATS ──────────────────────────────────────────────────────
     async function cargarStats() {
-      // Total visitas
       const { count: total } = await db
         .from('visitas')
         .select('*', { count: 'exact', head: true });
 
-      // Visitantes únicos
       const { data: visitasData } = await db
         .from('visitas')
         .select('visitor_id');
@@ -496,24 +291,20 @@
         ? new Set(visitasData.map(v => v.visitor_id)).size
         : 0;
 
-      // Activos (last_seen en últimos 5 min)
       const hace5 = new Date(Date.now() - 5 * 60 * 1000).toISOString();
       const { count: activos } = await db
         .from('visitantes_activos')
         .select('*', { count: 'exact', head: true })
         .gte('last_seen', hace5);
 
-      // Páginas más visitadas
       const { data: paginas } = await db
         .from('visitas')
         .select('page');
 
-      // Actualizar DOM — stats
       setStatValue('statTotal',   total   ?? 0);
       setStatValue('statUnicos',  unicos  ?? 0);
       setStatValue('statActivos', activos ?? 0);
 
-      // Contar por página
       if (paginas) {
         const conteo = paginas.reduce((acc, v) => {
           acc[v.page] = (acc[v.page] || 0) + 1;
@@ -521,16 +312,33 @@
         }, {});
         const sorted = Object.entries(conteo).sort((a, b) => b[1] - a[1]);
         const tbody = document.getElementById('pagesBody');
+
         if (sorted.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="2" style="color:var(--dim);font-style:italic;font-family:'EB Garamond',serif">Sin visitas registradas aún.</td></tr>`;
+          // Usando textContent en lugar de innerHTML para el mensaje
+          const tr = document.createElement('tr');
+          const td = document.createElement('td');
+          td.colSpan = 2;
+          td.style.cssText = 'color:var(--dim);font-style:italic;font-family:EB Garamond,serif';
+          td.textContent = 'Sin visitas registradas aún.';
+          tr.appendChild(td);
+          tbody.innerHTML = '';
+          tbody.appendChild(tr);
         } else {
-          tbody.innerHTML = sorted.map(([page, n]) =>
-            `<tr><td>/${page === 'index' ? '' : page}</td><td>${n}</td></tr>`
-          ).join('');
+          tbody.innerHTML = '';
+          sorted.forEach(([page, n]) => {
+            const tr = document.createElement('tr');
+            const tdPage = document.createElement('td');
+            const tdN    = document.createElement('td');
+            // textContent previene XSS — datos de DB nunca van a innerHTML directamente
+            tdPage.textContent = '/' + (page === 'index' ? '' : sanitize(page));
+            tdN.textContent    = n.toLocaleString('es-ES');
+            tr.appendChild(tdPage);
+            tr.appendChild(tdN);
+            tbody.appendChild(tr);
+          });
         }
       }
 
-      // Timestamp
       document.getElementById('lastUpdated').textContent =
         'Actualizado: ' + new Date().toLocaleTimeString('es-ES');
     }
@@ -556,7 +364,7 @@
     function actualizarUIKillswitch() {
       const btn    = document.getElementById('killBtn');
       const status = document.getElementById('killswitchStatus');
-      const alert  = document.getElementById('alertOn');
+      const alertEl = document.getElementById('alertOn');
 
       btn.disabled = false;
 
@@ -565,13 +373,13 @@
         btn.className = 'btn-killswitch desactivar';
         status.textContent = 'Estado: ACTIVO — web bloqueada';
         status.className = 'killswitch-status on';
-        alert.classList.add('visible');
+        alertEl.classList.add('visible');
       } else {
         btn.textContent = 'Activar killswitch';
         btn.className = 'btn-killswitch activar';
         status.textContent = 'Estado: inactivo — web funcionando con normalidad';
         status.className = 'killswitch-status off';
-        alert.classList.remove('visible');
+        alertEl.classList.remove('visible');
       }
     }
 
@@ -580,36 +388,29 @@
       btn.disabled = true;
       btn.textContent = '…';
 
-      const nuevoValor = construccionActiva ? 'false' : 'true';
-
       if (!construccionActiva) {
         const ok = confirm(
           '⚠️ ¿Activar modo En Construcción?\n\nLa web quedará bloqueada para todos los visitantes inmediatamente.'
         );
-        if (!ok) {
-          actualizarUIKillswitch();
-          return;
-        }
+        if (!ok) { actualizarUIKillswitch(); return; }
       }
 
-      const { error } = await db
-        .from('config')
-        .update({ value: nuevoValor, updated_at: new Date().toISOString() })
-        .eq('key', 'en_construccion');
+      const nuevoValor = construccionActiva ? 'false' : 'true';
+
+      const { error } = await db.rpc('toggle_killswitch', { nuevo_valor: nuevoValor });
 
       if (!error) {
         construccionActiva = !construccionActiva;
         actualizarUIKillswitch();
       } else {
-        alert('Error al actualizar: ' + error.message);
+        window.alert('Error al actualizar: ' + error.message);
         actualizarUIKillswitch();
       }
     });
 
-    // ── BOTÓN REFRESH ──────────────────────────────────────────────
     document.getElementById('refreshBtn').addEventListener('click', cargarStats);
 
-    // ── AUTO-REFRESH visitas activas cada 30s ──────────────────────
+    // Auto-refresh activos cada 30s
     setInterval(async () => {
       const hace5 = new Date(Date.now() - 5 * 60 * 1000).toISOString();
       const { count } = await db
@@ -619,7 +420,6 @@
       setStatValue('statActivos', count ?? 0);
     }, 30_000);
 
-    // ── INIT ───────────────────────────────────────────────────────
     cargarStats();
     cargarKillswitch();
   </script>
