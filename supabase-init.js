@@ -20,12 +20,9 @@
     || 'index';
 
   try {
-    const { data } = await db
-      .from('config')
-      .select('value')
-      .eq('key', 'en_construccion')
-      .single();
-
+    const timeout = new Promise(resolve => setTimeout(resolve, 2500));
+    const fetchKill = db.from('config').select('value').eq('key', 'en_construccion').single();
+    const { data } = await Promise.race([fetchKill, timeout.then(() => ({}))]);
     if (data?.value === 'true') {
       mostrarConstruccion();
       return;
