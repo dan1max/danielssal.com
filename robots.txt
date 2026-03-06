@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /login.html
+Disallow: /panel.html
+
+Sitemap: https://danielssal.com/sitemap.xml
